@@ -47,55 +47,61 @@ printbtn.addEventListener("click", () => {
     }
     
     const janela = window.open("", "_blank");
-    janela.document.write(`
-        <html>
-        <head>
-            <title>QR Code - ${qrinput.value}</title>
-            <style>
-                body { 
-                    text-align: center; 
-                    font-family: Arial, sans-serif; 
-                    margin: 50px 20px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    min-height: 80vh;
-                }
-                img { 
-                    width: 250px; 
-                    height: 250px; 
-                    border: 1px solid #ddd;
-                    border-radius: 8px;
-                }
-                p { 
-                    margin-top: 20px; 
-                    font-size: 16px; 
-                    color: #555;
-                    max-width: 400px;
-                    word-break: break-all;
-                }
-                h2 {
-                    color: #2c3e50;
-                    margin-bottom: 20px;
-                }
-                @media print {
-                    body { margin: 0; }
-                }
-            </style>
-        </head>
-        <body>
-            <h2>QR Code Gerado</h2>
-            <img src="${qrimg.src}" alt="QR Code">
-            <p><strong>Conteúdo:</strong> ${qrinput.value}</p>
-            <script>
-                window.onload = function() {
-                    window.print();
-                };
-            <\/script>
-        </body>
-        </html>
-    `);
+    const doc = janela.document;
+    doc.title = `QR Code - ${qrinput.value}`;
+
+    const style = doc.createElement("style");
+    style.textContent = `
+        body { 
+            text-align: center; 
+            font-family: Arial, sans-serif; 
+            margin: 50px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+        }
+        img { 
+            width: 250px; 
+            height: 250px; 
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        p { 
+            margin-top: 20px; 
+            font-size: 16px; 
+            color: #555;
+            max-width: 400px;
+            word-break: break-all;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        @media print {
+            body { margin: 0; }
+        }
+    `;
+    doc.head.appendChild(style);
+
+    const heading = doc.createElement("h2");
+    heading.textContent = "QR Code Gerado";
+
+    const image = doc.createElement("img");
+    image.src = qrimg.src;
+    image.alt = "QR Code";
+
+    const content = doc.createElement("p");
+    content.textContent = `Conteúdo: ${qrinput.value}`;
+
+    doc.body.appendChild(heading);
+    doc.body.appendChild(image);
+    doc.body.appendChild(content);
+
+    janela.onload = function() {
+        janela.print();
+    };
     janela.document.close();
 });
 
